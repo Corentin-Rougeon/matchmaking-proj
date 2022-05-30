@@ -1,0 +1,82 @@
+{
+    "@whiteSquare,whitePiece": {
+        "colours": {
+            "normal_bg": "#ffffff",
+            "hovered_bg": "#999999",
+            "normal_text": "#ffffff",
+            "hovered_text": "#ffffff"
+        },
+        "font": {
+            "name": "DejaVuSans-Bold",
+            "size": "40",
+            "regular_resource": {
+                "package": "assets.fonts",
+                "resource": "DejaVuSans.ttf"
+            }
+        },
+        "images": {
+            "normal_image": {
+                "package": "assets",
+                "resource": "button.png"
+            }
+        },
+        "misc":
+         {
+             "boder_width": "0"
+         }
+    },
+    "@whiteSquare,blackPiece": {
+        "colours": {
+            "normal_bg": "#999999",
+            "hovered_bg": "#999999",
+            "normal_text":"#000000",
+            "hovered_text": "#000000"
+        },
+        "font": {
+            "name": "DejaVuSans-Bold",
+            "size": "40",
+            "regular_resource": {
+                "package": "assets.fonts",
+                "resource": "DejaVuSans.ttf"
+            }
+        }
+    },
+
+
+    "@blackSquare,whitePiece":
+    {
+        "colours":
+        {
+            "normal_bg": "#3d2d0c",
+            "hovered_bg":"#3d2d0c",
+            "normal_text":"#ffffff",
+            "hovered_text":"#ffffff"
+        },
+        "font": {
+            "name": "DejaVuSans-Bold",
+            "size": "40",
+            "regular_resource": {
+                "package": "assets.fonts",
+                "resource": "DejaVuSans-Bold.ttf"
+            }
+        }
+    },
+    "@blackSquare,blackPiece":
+    {
+        "colours":
+        {
+            "normal_bg": "#3d2d0c",
+            "hovered_bg":"#3d2d0c",
+            "normal_text":"#000000",
+            "hovered_text": "#000000"
+        },
+        "font": {
+            "name": "DejaVuSans-Bold",
+            "size": "40",
+            "regular_resource": {
+                "package": "assets.fonts",
+                "resource": "DejaVuSans-Bold.ttf"
+            }
+        }
+    }
+}
