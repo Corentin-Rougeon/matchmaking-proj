@@ -60,12 +60,21 @@ def redrawWindow(win,player, player2):
 
 
 def main():
-    run = True
+    run = False
     n = Network()
+
+
+    print("Connected to server")
     startPos = read_pos(n.getPos())
-    p = Player(startPos[0],startPos[1],100,100,(0,255,0))
-    p2 = Player(0,0,100,100,(255,0,0))
+    p = Player(startPos[0], startPos[1], 100, 100, (0, 255, 0))
+    p2 = Player(0, 0, 100, 100, (255, 0, 0))
     clock = pygame.time.Clock()
+
+
+    while not n.connected:
+        run = False
+
+    run = True
 
     while run:
         clock.tick(60)

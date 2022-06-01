@@ -1,11 +1,16 @@
+import secrets
 import socket
+import json
 from _thread import *
 import sys
 
-server = "192.168.0.11"
+server = "0.0.0.0"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+Queue = []
+Games = []
 
 try:
     s.bind((server, port))
@@ -15,47 +20,76 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
-def read_pos(str):
-    str = str.split(",")
-    return int(str[0]), int(str[1])
 
 
-def make_pos(tup):
-    return str(tup[0]) + "," + str(tup[1])
+def send_data(conn, data):
+    conn.send(str.encode(data))
 
-pos = [(0,0),(100,100)]
 
-def threaded_client(conn, player):
-    conn.send(str.encode(make_pos(pos[player])))
+def recieve(conn,player):
+    print(conn,player)
+    data = conn.recv(2048).decode()
+
+    if(data == "handshake"):
+        send_data(conn, "handshake")
+
+
+    return conn.recv(2048).decode()
+
+def threaded_client(conn, datain):
+    conn.send(str.encode(datain))
+    print(conn)
+    print(datain)
+    QueuePos = 0
     reply = ""
     while True:
         try:
-            data = read_pos(conn.recv(2048).decode())
-            pos[player] = data
+            data = conn.recv(2048).decode()
+            jsonData = json.loads(data)
+            header = ""
+
+            if "header" in jsonData:
+                header = jsonData["header"]
 
             if not data:
                 print("Disconnected")
+
                 break
             else:
-                if player == 1:
-                    reply = pos[0]
-                else:
-                    reply = pos[1]
+                reply = data
 
                 print("Received: ", data)
-                print("Sending : ", reply)
+                print("header: ", header)
 
-            conn.sendall(str.encode(make_pos(reply)))
+                if header == "connect":
+                    Queue.append(datain)
+                    print(Queue)
+                    QueuePos = len(Queue)
+                    reply = "{\"header\": \"connected\"}"
+
+
+                if header == "queue":
+                    QueuePos = Queue.index(datain) + 1
+                    reply = "{\"header\": \"queue\",\"data\":{\"pos\":\"" + str(QueuePos) + "\"}}"
+
+                print("Sending: ", reply)
+
+            conn.sendall(str.encode(reply))
         except:
             break
 
+    Queue.remove(datain)
+
     print("Lost connection")
+    print(Queue)
     conn.close()
 
 currentPlayer = 0
 while True:
     conn, addr = s.accept()
+    token = secrets.token_urlsafe(16)
     print("Connected to:", addr)
 
-    start_new_thread(threaded_client, (conn, currentPlayer))
+    start_new_thread(threaded_client, (conn, token))
+    print(currentPlayer)
     currentPlayer += 1
