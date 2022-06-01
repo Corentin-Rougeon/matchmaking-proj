@@ -18,10 +18,14 @@ con = client.send(json.dumps(data))
 
 print(json.loads(con))
 
+con = client.send("{\"header\": \"request_queue\"}")
 
-while True:
-    con = client.send("{\"header\": \"queue\"}")
+data = json.loads(con)
 
-    queuePos = json.loads(con)["data"]["pos"]
+if data["header"] == "queued_in":
+    while True:
+        con = client.send("{\"header\": \"queue\"}")
 
-    print("queue position :" + queuePos)
+        queuePos = json.loads(con)["data"]["pos"]
+
+        print("queue position :" + queuePos)

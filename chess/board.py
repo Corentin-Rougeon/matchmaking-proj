@@ -1,7 +1,7 @@
 from itertools import groupby
 from copy import deepcopy
 
-import pieces
+from chess import pieces
 import re
 
 class ChessError(Exception): pass

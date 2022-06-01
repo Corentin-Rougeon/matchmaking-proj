@@ -1,6 +1,7 @@
-# -*- encoding: utf-8 -*-
-import board
+from chess import board
 import os
+from colorama import init
+from termcolor import colored
 
 UNICODE_PIECES = {
   'r': u'♜', 'n': u'♞', 'b': u'♝', 'q': u'♛',
@@ -15,11 +16,16 @@ class BoardGuiConsole(object):
     '''
     error = ''
 
-    def __init__(self, chessboard):
+    def __init__(self, chessboard,color):
+        self.color = color
         self.board = chessboard
 
+
+    def load(self,fen):
+        self.board.load(fen)
+
     def move(self):
-        os.system("clear")
+        os.system("cls")
         self.unicode_representation()
         print("\n", self.error)
         print("State a move in chess notation (e.g. A2A3). Type \"exit\" to leave:\n", ">>>",)
@@ -31,21 +37,39 @@ class BoardGuiConsole(object):
         try:
             if len(coord) != 4: raise board.InvalidCoord
             self.board.move(coord[0:2], coord[2:4])
-            os.system("clear")
+            os.system("cls")
         except board.ChessError as error:
             self.error = "Error: %s" % error.__class__.__name__
 
-        self.move()
+
 
     def unicode_representation(self):
-        print("\n", ("%s's turn\n" % self.board.player_turn.capitalize()).center(28))
+        white_square = True
+        if(self.color == self.board.player_turn):
+            print("    your turn\n")
+        else:
+            print("    oponent's turn\n")
+
         for number in self.board.axis_x[::-1]:
             print( " " + str(number) + " ",end="")
+            white_square = not white_square
             for letter in self.board.axis_y:
+                white_square = not white_square
+                bk = "on_grey"
+                if (white_square):
+                    bk = "on_white"
+
+                fg = "red"
+
                 piece = self.board[letter+str(number)]
                 if piece is not None:
-                    print(UNICODE_PIECES[piece.abbriviation] + ' ',end="")
-                else: print('  ',end="")
+                    if piece.abbriviation.isupper():
+                        fg = "green"
+
+                if piece is not None:
+
+                    print(colored(piece.abbriviation + ' ',fg,bk),end="")
+                else: print(colored('  ',"red",bk),end="")
             print("\n",end="")
         print("   " + " ".join(self.board.axis_y))
 
@@ -55,5 +79,7 @@ def display(board):
         gui = BoardGuiConsole(board)
         gui.move()
     except (KeyboardInterrupt, EOFError):
-        os.system("clear")
+        os.system("cls")
         exit(0)
+
+#display(board.Board())
