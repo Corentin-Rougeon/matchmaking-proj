@@ -1,8 +1,10 @@
 import secrets
 import socket
 import json
+import string
 from _thread import *
 import sys
+import random
 
 server = "0.0.0.0"
 port = 5555
@@ -144,7 +146,8 @@ currentPlayer = 0
 
 while True:
     conn, addr = s.accept()
-    token = secrets.token_urlsafe(16)
+    token = ''.join(random.choices(string.ascii_lowercase, k=10))
+
     print("Connected to:", addr)
 
 
